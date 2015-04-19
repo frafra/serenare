@@ -7,7 +7,7 @@ import io.thp.pyotherside 1.4
 
 ApplicationWindow {
     title: qsTr("Serenare 0.3-dev")
-    width: 640
+    width: 840
     height: 480
     visible: true
 
@@ -22,7 +22,7 @@ ApplicationWindow {
     }
 
     function generic(part) {
-        return '<span style="color: grey; font-size: small;">'+
+        return '<span style="color: midnightblue;">'+
                part+'</span>';
     }
 
