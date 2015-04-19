@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.1
 import io.thp.pyotherside 1.4
 
 ApplicationWindow {
-    title: qsTr("Serenare 0.2")
+    title: qsTr("Serenare 0.3-dev")
     width: 640
     height: 480
     visible: true
@@ -32,12 +32,19 @@ ApplicationWindow {
                 Layout.fillWidth: true
             }
             CheckBox {
+                id: recStatus
+                text: qsTr("Recording")
+                checked: false
+                onClicked: {
+                    send('/r');
+                }
+            }
+            CheckBox {
                 id: micStatus
                 text: qsTr("Microphone")
                 checked: true
                 onClicked: {
                     send('/m');
-                    // It should prevent default action
                 }
             }
         }
@@ -118,7 +125,10 @@ ApplicationWindow {
                     break;
                 case 'mute':
                     micStatus.checked = data[1] === 'off';
-                    break
+                    break;
+                case 'recording':
+                    recStatus.checked = data[1] === 'on';
+                    break;
             }
             console.log(data);
         }

@@ -42,6 +42,10 @@ def parse(line):
                                  cgi.escape(user), host)
             elif message[2] == 'Mute:':
                 pyotherside.send('mute', message[3])
+            elif message[2] == 'Recording:':
+                pyotherside.send('recording', message[3].rstrip(','))
+                # Showing file name, if provided, with 'generic'
+                pyotherside.send('generic', cgi.escape(line))
             else:
                 pyotherside.send('generic', cgi.escape(line))
         else:
