@@ -48,6 +48,8 @@ def parse(line):
                 host = message[3][1:-1]
                 pyotherside.send('node-left', timestamp,
                                  cgi.escape(user), host)
+            elif message[2] == 'Autoaccept':
+                pyotherside.send('autoaccept', message[4])
             elif message[2] == 'Mute:':
                 pyotherside.send('mute', message[3])
             elif message[2] == 'Recording:':

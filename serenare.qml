@@ -29,6 +29,14 @@ ApplicationWindow {
     toolBar: ToolBar {
         RowLayout {
             anchors.fill: parent
+            CheckBox {
+                id: autoacceptStatus
+                text: qsTr("Autoaccept")
+                checked: false
+                onClicked: {
+                    send('/a');
+                }
+            }
             Item {
                 Layout.fillWidth: true
             }
@@ -122,6 +130,9 @@ ApplicationWindow {
                         }
                     }
                     break;
+                case 'autoaccept':
+                    autoacceptStatus.checked = data[1] === 'on';
+                    break
                 case 'mute':
                     micStatus.checked = data[1] === 'off';
                     break;
