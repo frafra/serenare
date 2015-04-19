@@ -41,7 +41,7 @@ def parse(line):
                 pyotherside.send('node-left', timestamp,
                                  cgi.escape(user), host)
             elif message[2] == 'Mute:':
-                pyotherside.send('mute', message[2])
+                pyotherside.send('mute', message[3])
             else:
                 pyotherside.send('generic', cgi.escape(line))
         else:

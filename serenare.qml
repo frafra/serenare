@@ -11,9 +11,13 @@ ApplicationWindow {
     height: 480
     visible: true
 
+    function send(message) {
+        python.call('serenare.writeInput', [message]);
+    }
+
     function sendUserInput() {
         var widget = textInput;
-        python.call('serenare.writeInput', [widget.text]);
+        send(widget.text);
         widget.text = "";
     }
 
@@ -21,7 +25,7 @@ ApplicationWindow {
         return '<span style="color: lightgrey; font-size: small;">'+part+'</span>';
     }
 
-    /*toolBar: ToolBar {
+    toolBar: ToolBar {
         RowLayout {
             anchors.fill: parent
             Item {
@@ -32,12 +36,12 @@ ApplicationWindow {
                 text: qsTr("Microphone")
                 checked: true
                 onClicked: {
-                    //socket.sendTextMessage('/m');
+                    send('/m');
                     // It should prevent default action
                 }
             }
         }
-    }*/
+    }
 
     ListModel {
         id: userListModel
@@ -112,6 +116,9 @@ ApplicationWindow {
                         }
                     }
                     break;
+                case 'mute':
+                    micStatus.checked = data[1] === 'off';
+                    break
             }
             console.log(data);
         }
