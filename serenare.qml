@@ -29,6 +29,9 @@ ApplicationWindow {
     toolBar: ToolBar {
         RowLayout {
             anchors.fill: parent
+            Item {
+                Layout.fillWidth: true
+            }
             Switch {
                 id: autoacceptStatus
                 checked: false
@@ -77,6 +80,9 @@ ApplicationWindow {
             }
             Label {
                 text: qsTr("Microphone")
+            }
+            Item {
+                Layout.fillWidth: true
             }
         }
     }
