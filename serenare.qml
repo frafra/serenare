@@ -29,32 +29,41 @@ ApplicationWindow {
     toolBar: ToolBar {
         RowLayout {
             anchors.fill: parent
-            CheckBox {
+            Switch {
                 id: autoacceptStatus
-                text: qsTr("Autoaccept")
                 checked: false
                 onClicked: {
                     send('/a');
                 }
             }
+            Label {
+                text: qsTr("Autoaccept")
+            }
             Item {
                 Layout.fillWidth: true
             }
-            CheckBox {
+            Switch {
                 id: recStatus
-                text: qsTr("Recording")
                 checked: false
                 onClicked: {
                     send('/r');
                 }
             }
-            CheckBox {
+            Label {
+                text: qsTr("Recording")
+            }
+            Item {
+                Layout.fillWidth: true
+            }
+            Switch {
                 id: micStatus
-                text: qsTr("Microphone")
                 checked: true
                 onClicked: {
                     send('/m');
                 }
+            }
+            Label {
+                text: qsTr("Microphone")
             }
         }
     }
