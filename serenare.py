@@ -77,6 +77,4 @@ def startSeren():
 if __name__ == '__main__':
     directory = os.path.dirname(os.path.abspath(__file__))
     resource = os.path.join(directory, 'serenare.qml')
-    qmlscene = subprocess.Popen(['qmlscene', resource])
-    qmlscene.wait()
-    
+    os.execvp('qmlscene', ('', resource))
