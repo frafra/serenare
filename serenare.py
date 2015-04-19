@@ -73,6 +73,8 @@ def startSeren():
     stdin = seren.stdin
     pyotherside.atexit(lambda: kill(seren))
     _thread.start_new_thread(readOutput, (seren.stdout,))
+    pyotherside.send('node-join', datetime.datetime.now(),
+                     cgi.escape(username), '127.0.0.1:8110')
 
 if __name__ == '__main__':
     directory = os.path.dirname(os.path.abspath(__file__))
