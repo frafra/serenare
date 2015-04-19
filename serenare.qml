@@ -108,19 +108,15 @@ ApplicationWindow {
                     messageBox.append(generic(data[1]));
                     break;
                 case 'message':
-                    var user = data[2];
-                    var text = data[3];
-                    messageBox.append('<span style="color: blue;">'+user+
-                                      '</span> <span>'+text+'</span>');
+                    messageBox.append('<span style="color: blue;">'+
+                                      data[2]+'</span> '+data[3]);
                     break;
                 case 'node-join':
-                    var user = data[2];
-                    userListModel.append({'username':user});
+                    userListModel.append({'username':data[2], 'host':data[3]});
                     break;
                 case 'node-left':
-                    var user = data[2];
                     for (var i=0; i<userListModel.count; i++) {
-                        if (userListModel.get(i)['username'] === user) {
+                        if (userListModel.get(i)['host'] === data[3]) {
                             userListModel.remove(i);
                             break;
                         }
