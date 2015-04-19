@@ -79,6 +79,7 @@ ApplicationWindow {
             TextField {
                 id: textInput
                 Layout.fillWidth: true
+                focus: true
                 Keys.onReturnPressed: sendUserInput()
             }
             Button {
