@@ -64,6 +64,7 @@ ApplicationWindow {
                 textFormat: TextEdit.RichText
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                onLinkActivated: Qt.openUrlExternally(link)
             }
             TableView {
                 id: userListView

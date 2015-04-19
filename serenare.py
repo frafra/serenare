@@ -4,6 +4,7 @@ import cgi
 import datetime
 import getpass
 import os
+import re
 import shlex
 import subprocess
 import _thread
@@ -14,6 +15,7 @@ except ImportError:
     pass # Only available when called from Qt Quick
 
 FORMAT = '[%Y/%m/%d %H:%M:%S]'
+URL = re.compile(r'(https?://\S*)')
 
 def parse(line):
     if len(line.strip()) == 0:
@@ -24,8 +26,14 @@ def parse(line):
         if message[0] == '(C)':
             user = message[1][:-1]
             text = line.split('> ', 1)[1]
+            for word in text.split():
+                if URL.match(word) == None:
+                    text = text.replace(word, cgi.escape(word))
+                else:
+                    link = URL.sub(r'<a href="\1">\1</a>', word)
+                    text = text.replace(word, link)
             pyotherside.send('message', timestamp,
-                             cgi.escape(user), cgi.escape(text))
+                             cgi.escape(user), text)
         elif message[0] == '(G)':
             if line.endswith('accepted the call') or \
                line.endswith('has joined the conference'):
