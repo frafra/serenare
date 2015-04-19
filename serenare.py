@@ -64,7 +64,7 @@ def kill(process):
 def startSeren():
     username = getpass.getuser()
     seren = subprocess.Popen(
-        shlex.split('seren -Nn %s' % username),
+        shlex.split('seren -N'),
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
