@@ -56,6 +56,19 @@ ApplicationWindow {
                 Layout.fillWidth: true
             }
             Switch {
+                id: loopbackStatus
+                checked: false
+                onClicked: {
+                    send('/l');
+                }
+            }
+            Label {
+                text: qsTr("Loopback")
+            }
+            Item {
+                Layout.fillWidth: true
+            }
+            Switch {
                 id: micStatus
                 checked: true
                 onClicked: {
@@ -147,6 +160,9 @@ ApplicationWindow {
                     break;
                 case 'recording':
                     recStatus.checked = data[1] === 'on';
+                    break;
+                case 'loopback':
+                    loopbackStatus.checked = data[1] === 'on';
                     break;
                 case 'exit':
                     Qt.quit();

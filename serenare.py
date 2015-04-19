@@ -56,6 +56,8 @@ def parse(line):
                 pyotherside.send('recording', message[3].rstrip(','))
                 # Showing file name, if provided, with 'generic'
                 pyotherside.send('generic', cgi.escape(line))
+            elif message[2] == 'Loopback:':
+                pyotherside.send('loopback', message[3])
             else:
                 pyotherside.send('generic', cgi.escape(line))
         else:
