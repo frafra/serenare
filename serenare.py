@@ -60,6 +60,8 @@ def readOutput(stdout):
 def writeInput(message):
     stdin.write((message+'\n').encode('utf8'))
     stdin.flush()
+    if message.startswith('/q'):
+        pyotherside.send('exit')
 
 def kill(process):
     if process.poll() == None:

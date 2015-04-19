@@ -131,6 +131,9 @@ ApplicationWindow {
                 case 'recording':
                     recStatus.checked = data[1] === 'on';
                     break;
+                case 'exit':
+                    Qt.quit();
+                    break;
             }
             console.log(data);
         }
