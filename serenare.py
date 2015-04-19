@@ -79,4 +79,4 @@ def startSeren():
 if __name__ == '__main__':
     directory = os.path.dirname(os.path.abspath(__file__))
     resource = os.path.join(directory, 'serenare.qml')
-    os.execvp('qmlscene', ('', resource))
+    os.execvp('qmlscene', ('qmlscene', resource))

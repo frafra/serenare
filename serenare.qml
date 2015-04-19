@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.1
 import io.thp.pyotherside 1.4
 
 ApplicationWindow {
-    title: qsTr("Serenare 0.1")
+    title: qsTr("Serenare 0.2")
     width: 640
     height: 480
     visible: true
