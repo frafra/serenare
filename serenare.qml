@@ -22,7 +22,8 @@ ApplicationWindow {
     }
 
     function generic(part) {
-        return '<span style="color: lightgrey; font-size: small;">'+part+'</span>';
+        return '<span style="color: grey; font-size: small;">'+
+               part+'</span>';
     }
 
     toolBar: ToolBar {
@@ -107,8 +108,8 @@ ApplicationWindow {
                 case 'message':
                     var user = data[2];
                     var text = data[3];
-                    messageBox.append('<span style="color: lightblue;">'+user+'</span>' +
-                                      ' <span>'+text+'</span>');
+                    messageBox.append('<span style="color: blue;">'+user+
+                                      '</span> <span>'+text+'</span>');
                     break;
                 case 'node-join':
                     var user = data[2];
