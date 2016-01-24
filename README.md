@@ -2,6 +2,8 @@
 
 Qt 5 interface for Seren
 
+[![Code Issues](https://www.quantifiedcode.com/api/v1/project/81955080ed214a6d9fa72a35544759d5/badge.svg)](https://www.quantifiedcode.com/app/project/81955080ed214a6d9fa72a35544759d5)
+
 ## Dependency tree
 
 1. PyOtherSide: https://thp.io/2011/pyotherside/
