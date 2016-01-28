@@ -1,17 +1,16 @@
 # Serenare
 
-Qt 5 interface for Seren
+Qt 5 interface for [Seren](http://holdenc.altervista.org/seren/)
 
 [![Build Status](https://travis-ci.org/frafra/serenare.svg?branch=master)](https://travis-ci.org/frafra/serenare)
 [![Code Issues](https://www.quantifiedcode.com/api/v1/project/81955080ed214a6d9fa72a35544759d5/badge.svg)](https://www.quantifiedcode.com/app/project/81955080ed214a6d9fa72a35544759d5)
 
 ## Dependency tree
 
-1. PyOtherSide: https://thp.io/2011/pyotherside/
-   1. Python 3
-   2. Qt 5 (qtdeclarative module)
-2.  Qt 5 (qtquickcontrols module)
-3.  qmlscene
+1.  [Seren](http://holdenc.altervista.org/seren/)
+2.  [Qt](https://www.qt.io/) 5 (with Qt Quick Controls and qmlscene)
+3.  [Python](https://www.python.org/) >= 3.4
+4.  [PyOtherSide](https://thp.io/2011/pyotherside/)
 
 ### Fedora
 
