@@ -11,3 +11,9 @@ Qt 5 interface for Seren
    2. Qt 5 (qtdeclarative module)
 2.  Qt 5 (qtquickcontrols module)
 3.  qmlscene
+
+### Fedora
+
+How to satisfy dependencies on Fedora:
+
+    # dnf install seren pyotherside qt5-qtquickcontrols qt5-qtdeclarative-devel
