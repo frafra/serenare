@@ -37,8 +37,7 @@ def parse(line):
                 else:
                     link = URL.sub(r'<a href="\1">\1</a>', word)
                     text = text.replace(word, link)
-            pyotherside.send('message', timestamp,
-                             cgi.escape(user), text)
+            yield 'message', timestamp, cgi.escape(user), text
         elif message[0] == '(G)':
             if line.endswith('accepted the call') or \
                line.endswith('has joined the conference'):
@@ -46,35 +45,34 @@ def parse(line):
                     return
                 user = message[2]
                 host = message[3][1:-1]
-                pyotherside.send('node-join', timestamp,
-                                 cgi.escape(user), host)
+                yield 'node-join', timestamp, cgi.escape(user), host
             #elif line.endswith('is calling: /y to accept, /n to refuse'):
             #    pass
             elif ' '.join(message[4:6]) == 'has left':
                 user = message[2]
                 host = message[3][1:-1]
-                pyotherside.send('node-left', timestamp,
-                                 cgi.escape(user), host)
+                yield 'node-left', timestamp, cgi.escape(user), host
             elif message[2] == 'Autoaccept':
-                pyotherside.send('autoaccept', message[4])
+                yield 'autoaccept', message[4]
             elif message[2] == 'Mute:':
-                pyotherside.send('mute', message[3])
+                yield 'mute', message[3]
             elif message[2] == 'Recording:':
-                pyotherside.send('recording', message[3].rstrip(','))
+                yield 'recording', message[3].rstrip(',')
                 # Showing file name, if provided, with 'generic'
-                pyotherside.send('generic', cgi.escape(line))
+                yield 'generic', cgi.escape(line)
             elif message[2] == 'Loopback:':
-                pyotherside.send('loopback', message[3])
+                yield 'loopback', message[3]
             else:
-                pyotherside.send('generic', cgi.escape(line))
+               yield 'generic', cgi.escape(line)
         else:
-            pyotherside.send('generic', cgi.escape(line))
+            yield 'generic', cgi.escape(line)
     else:
-        pyotherside.send('generic', cgi.escape(line))
+        yield 'generic', cgi.escape(line)
 
 def read_output(stdout):
     for line in stdout:
-        parse(line.decode('utf8').rstrip())
+        for result in parse(line.decode('utf8').rstrip()):
+            pyotherside.send(*result)
 
 def write_input(message):
     stdin.write((message+'\n').encode('utf8'))
