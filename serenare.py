@@ -3,16 +3,16 @@
 import cgi
 import datetime
 import getpass
+import importlib.util
 import os
 import re
 import shlex
 import subprocess
 import _thread
 
-try:
+# Only available when called from Qt Quick
+if importlib.util.find_spec('pyotherside'):
     import pyotherside
-except ImportError:
-    pass # Only available when called from Qt Quick
 
 FORMAT = '[%Y/%m/%d %H:%M:%S]'
 URL = re.compile(r'(https?://\S*)')
@@ -43,6 +43,8 @@ def parse(line):
                 host = message[3][1:-1]
                 pyotherside.send('node-join', timestamp,
                                  cgi.escape(user), host)
+            #elif line.endswith('is calling: /y to accept, /n to refuse'):
+            #    pass
             elif ' '.join(message[4:6]) == 'has left':
                 user = message[2]
                 host = message[3][1:-1]
