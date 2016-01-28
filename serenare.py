@@ -23,6 +23,7 @@ FORMAT = '[%Y/%m/%d %H:%M:%S]'
 URL = re.compile(r'(https?://\S*)')
 
 def parse(line):
+    """ Parser compatible with seren 0.0.21 """
     if not line.strip():
         pass
     elif line[0] == '[':
@@ -70,21 +71,25 @@ def parse(line):
         yield 'generic', cgi.escape(line)
 
 def read_output(stdout):
+    """ Reading from Seren output """
     for line in stdout:
         for result in parse(line.decode('utf8').rstrip()):
             pyotherside.send(*result)
 
 def write_input(message):
+    """ Writing to Seren input """
     stdin.write((message+'\n').encode('utf8'))
     stdin.flush()
     if message.startswith('/q'):
         pyotherside.send('exit')
 
 def kill(process):
+    """ Kill process """
     if process.poll() == None:
         process.kill()
 
 def start_seren():
+    """ Run Seren without ncurses and connect pipes """
     username = getpass.getuser()
     seren = subprocess.Popen(
         shlex.split('seren -N'),
