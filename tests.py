@@ -20,6 +20,7 @@ class TestParser(unittest.TestCase):
         """ Node joined """
         line = '[2015/11/08 14:22:15] (G) [main] frafra (127.0.0.1:8111) has joined the conference'
         expected = [('node-join', datetime.datetime(2015, 11, 8, 14, 22, 15), 'frafra', '127.0.0.1:8111')]
+        self.assertEqual(list(serenare.parse(line)), expected)
     def test_parted(self):
         """ Node left """
         line = '[2015/11/08 14:22:20] (G) [main] frafra (127.0.0.1:8110) has left (reason: call ended)'
