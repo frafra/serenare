@@ -18,7 +18,7 @@ FORMAT = '[%Y/%m/%d %H:%M:%S]'
 URL = re.compile(r'(https?://\S*)')
 
 def parse(line):
-    if len(line.strip()) == 0:
+    if not line.strip():
         pass
     elif line[0] == '[':
         timestamp = datetime.datetime.strptime(line[:21], FORMAT)
