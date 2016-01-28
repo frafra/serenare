@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+import sys
+if sys.version_info < (3, 4):
+    print("I need Python 3.4 or newer")
+    exit(1)
+
 import cgi
 import datetime
 import getpass
