@@ -35,8 +35,14 @@ ApplicationWindow {
             Switch {
                 id: autoacceptStatus
                 checked: false
-                onClicked: {
-                    send('/a');
+                property bool status: false
+                onStatusChanged: {
+                    checked = status;
+                }
+                onCheckedChanged: {
+                    if (status != checked) {
+                        send('/a');
+                    }
                 }
             }
             Label {
@@ -48,8 +54,14 @@ ApplicationWindow {
             Switch {
                 id: recStatus
                 checked: false
-                onClicked: {
-                    send('/r');
+                property bool status: false
+                onStatusChanged: {
+                    checked = status;
+                }
+                onCheckedChanged: {
+                    if (status != checked) {
+                        send('/r');
+                    }
                 }
             }
             Label {
@@ -61,8 +73,14 @@ ApplicationWindow {
             Switch {
                 id: loopbackStatus
                 checked: false
-                onClicked: {
-                    send('/l');
+                property bool status: false
+                onStatusChanged: {
+                    checked = status;
+                }
+                onCheckedChanged: {
+                    if (status != checked) {
+                        send('/l');
+                    }
                 }
             }
             Label {
@@ -74,8 +92,14 @@ ApplicationWindow {
             Switch {
                 id: micStatus
                 checked: true
-                onClicked: {
-                    send('/m');
+                property bool status: true
+                onStatusChanged: {
+                    checked = status;
+                }
+                onCheckedChanged: {
+                    if (status != checked) {
+                        send('/m');
+                    }
                 }
             }
             Label {
@@ -159,16 +183,16 @@ ApplicationWindow {
                     }
                     break;
                 case 'autoaccept':
-                    autoacceptStatus.checked = data[1] === 'on';
+                    autoacceptStatus.status = data[1] === 'on';
                     break
                 case 'mute':
-                    micStatus.checked = data[1] === 'off';
+                    micStatus.status = data[1] === 'off';
                     break;
                 case 'recording':
-                    recStatus.checked = data[1] === 'on';
+                    recStatus.status = data[1] === 'on';
                     break;
                 case 'loopback':
-                    loopbackStatus.checked = data[1] === 'on';
+                    loopbackStatus.status = data[1] === 'on';
                     break;
                 case 'exit':
                     Qt.quit();
