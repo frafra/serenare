@@ -12,7 +12,7 @@ ApplicationWindow {
     visible: true
 
     function send(message) {
-        python.call('serenare.writeInput', [message]);
+        python.call('serenare.write_input', [message]);
     }
 
     function sendUserInput() {
@@ -131,7 +131,7 @@ ApplicationWindow {
         Component.onCompleted: {
             addImportPath(Qt.resolvedUrl('.'));
             importModule('serenare', function () {
-                call('serenare.startSeren');
+                call('serenare.start_seren');
             });
         }
         onError: {

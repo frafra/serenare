@@ -67,11 +67,11 @@ def parse(line):
     else:
         pyotherside.send('generic', cgi.escape(line))
 
-def readOutput(stdout):
+def read_output(stdout):
     for line in stdout:
         parse(line.decode('utf8').rstrip())
 
-def writeInput(message):
+def write_input(message):
     stdin.write((message+'\n').encode('utf8'))
     stdin.flush()
     if message.startswith('/q'):
@@ -81,7 +81,7 @@ def kill(process):
     if process.poll() == None:
         process.kill()
 
-def startSeren():
+def start_seren():
     username = getpass.getuser()
     seren = subprocess.Popen(
         shlex.split('seren -N'),
@@ -92,7 +92,7 @@ def startSeren():
     global stdin
     stdin = seren.stdin
     pyotherside.atexit(lambda: kill(seren))
-    _thread.start_new_thread(readOutput, (seren.stdout,))
+    _thread.start_new_thread(read_output, (seren.stdout,))
     pyotherside.send('node-join', datetime.datetime.now(),
                      cgi.escape(username), '127.0.0.1:8110')
 
