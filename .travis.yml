@@ -5,3 +5,7 @@ python:
   - "nightly"
 script:
   - python tests.py
+notifications:
+  irc:
+    channels:
+      - "chat.freenode.net#seren"
