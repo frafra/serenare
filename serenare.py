@@ -5,9 +5,9 @@ if sys.version_info < (3, 4):
     print("I need Python 3.4 or newer")
     exit(1)
 
-import cgi
 import datetime
 import getpass
+import html
 import importlib.util
 import os
 import re
@@ -34,11 +34,11 @@ def parse(line):
             text = line.split('> ', 1)[1]
             for word in text.split():
                 if URL.match(word) == None:
-                    text = text.replace(word, cgi.escape(word))
+                    text = text.replace(word, html.escape(word))
                 else:
                     link = URL.sub(r'<a href="\1">\1</a>', word)
                     text = text.replace(word, link)
-            yield 'message', timestamp, cgi.escape(user), text
+            yield 'message', timestamp, html.escape(user), text
         elif message[0] == '(G)':
             if line.endswith('accepted the call') or \
                line.endswith('has joined the conference'):
@@ -46,13 +46,13 @@ def parse(line):
                     return
                 user = message[2]
                 host = message[3][1:-1]
-                yield 'node-join', timestamp, cgi.escape(user), host
+                yield 'node-join', timestamp, html.escape(user), host
             #elif line.endswith('is calling: /y to accept, /n to refuse'):
             #    pass
             elif ' '.join(message[4:6]) == 'has left':
                 user = message[2]
                 host = message[3][1:-1]
-                yield 'node-left', timestamp, cgi.escape(user), host
+                yield 'node-left', timestamp, html.escape(user), host
             elif message[2] == 'Autoaccept':
                 yield 'autoaccept', message[4]
             elif message[2] == 'Mute:':
@@ -60,15 +60,15 @@ def parse(line):
             elif message[2] == 'Recording:':
                 yield 'recording', message[3].rstrip(',')
                 # Showing file name, if provided, with 'generic'
-                yield 'generic', cgi.escape(line)
+                yield 'generic', html.escape(line)
             elif message[2] == 'Loopback:':
                 yield 'loopback', message[3]
             else:
-               yield 'generic', cgi.escape(line)
+               yield 'generic', html.escape(line)
         else:
-            yield 'generic', cgi.escape(line)
+            yield 'generic', html.escape(line)
     else:
-        yield 'generic', cgi.escape(line)
+        yield 'generic', html.escape(line)
 
 def read_output(stdout):
     """ Reading from Seren output """
@@ -102,7 +102,7 @@ def start_seren():
     pyotherside.atexit(lambda: kill(seren))
     _thread.start_new_thread(read_output, (seren.stdout,))
     pyotherside.send('node-join', datetime.datetime.now(),
-                     cgi.escape(username), '127.0.0.1:8110')
+                     html.escape(username), '127.0.0.1:8110')
 
 if __name__ == '__main__':
     directory = os.path.dirname(os.path.abspath(__file__))
