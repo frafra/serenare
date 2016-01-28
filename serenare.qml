@@ -6,13 +6,13 @@ import QtQuick.Layouts 1.1
 import io.thp.pyotherside 1.4
 
 ApplicationWindow {
-    title: qsTr("Serenare 0.3-dev")
+    title: qsTr("Serenare 0.4-dev")
     width: 840
     height: 480
     visible: true
 
     function send(message) {
-        python.call('serenare.write_input', [message]);
+        python.call('serenare.serenClient.write', [message]);
     }
 
     function sendUserInput() {
@@ -41,13 +41,14 @@ ApplicationWindow {
                 }
                 onCheckedChanged: {
                     if (status != checked) {
-                        send('/a');
+                        send('autoaccept '+(checked && '1' || '0'));
                     }
                 }
             }
             Label {
                 text: qsTr("Autoaccept")
             }
+            /*
             Item {
                 Layout.fillWidth: true
             }
@@ -67,6 +68,7 @@ ApplicationWindow {
             Label {
                 text: qsTr("Recording")
             }
+            */
             Item {
                 Layout.fillWidth: true
             }
@@ -79,7 +81,7 @@ ApplicationWindow {
                 }
                 onCheckedChanged: {
                     if (status != checked) {
-                        send('/l');
+                        send('loop '+(checked && '1' || '0'));
                     }
                 }
             }
@@ -92,13 +94,13 @@ ApplicationWindow {
             Switch {
                 id: micStatus
                 checked: true
-                property bool status: true
+                property bool status: false
                 onStatusChanged: {
-                    checked = status;
+                    checked != status;
                 }
                 onCheckedChanged: {
-                    if (status != checked) {
-                        send('/m');
+                    if (status == checked) {
+                        send('mute '+(checked && '0' || '1'));
                     }
                 }
             }
@@ -183,16 +185,16 @@ ApplicationWindow {
                     }
                     break;
                 case 'autoaccept':
-                    autoacceptStatus.status = data[1] === 'on';
+                    autoacceptStatus.status = data[1];
                     break
                 case 'mute':
-                    micStatus.status = data[1] === 'off';
+                    micStatus.status = data[1];
                     break;
                 case 'recording':
-                    recStatus.status = data[1] === 'on';
+                    recStatus.status = data[1];
                     break;
-                case 'loopback':
-                    loopbackStatus.status = data[1] === 'on';
+                case 'loop':
+                    loopbackStatus.status = data[1];
                     break;
                 case 'exit':
                     Qt.quit();

@@ -5,6 +5,7 @@ if sys.version_info < (3, 4):
     print("I need Python 3.4 or newer")
     exit(1)
 
+import asyncio
 import datetime
 import getpass
 import html
@@ -12,95 +13,77 @@ import importlib.util
 import os
 import re
 import shlex
+import signal
 import subprocess
-import _thread
+import threading
 
 # Only available when called from Qt Quick
 if importlib.util.find_spec('pyotherside'):
     import pyotherside
 
-FORMAT = '[%Y/%m/%d %H:%M:%S]'
 URL = re.compile(r'(https?://\S*)')
+TOGGLE = ['mute', 'loop', 'autoaccept']
 
 def parse(line):
-    """ Parser compatible with seren 0.0.21 """
-    if not line.strip():
-        pass
-    elif line[0] == '[':
-        timestamp = datetime.datetime.strptime(line[:21], FORMAT)
-        message = line.split()[2:]
-        if message[0] == '(C)':
-            user = message[1][:-1]
-            text = line.split('> ', 1)[1]
-            for word in text.split():
-                if URL.match(word) == None:
-                    text = text.replace(word, html.escape(word))
-                else:
-                    link = URL.sub(r'<a href="\1">\1</a>', word)
-                    text = text.replace(word, link)
-            yield 'message', timestamp, html.escape(user), text
-        elif message[0] == '(G)':
-            if line.endswith('accepted the call') or \
-               line.endswith('has joined the conference'):
-                if message[2][0] == '(': # Username unavailable
-                    return
-                user = message[2]
-                host = message[3][1:-1]
-                yield 'node-join', timestamp, html.escape(user), host
-            #elif line.endswith('is calling: /y to accept, /n to refuse'):
-            #    pass
-            elif ' '.join(message[4:6]) == 'has left':
-                user = message[2]
-                host = message[3][1:-1]
-                yield 'node-left', timestamp, html.escape(user), host
-            elif message[2] == 'Autoaccept':
-                yield 'autoaccept', message[4]
-            elif message[2] == 'Mute:':
-                yield 'mute', message[3]
-            elif message[2] == 'Recording:':
-                yield 'recording', message[3].rstrip(',')
-                # Showing file name, if provided, with 'generic'
-                yield 'generic', html.escape(line)
-            elif message[2] == 'Loopback:':
-                yield 'loopback', message[3]
-            else:
-               yield 'generic', html.escape(line)
-        else:
-            yield 'generic', html.escape(line)
+    """ Parser compatible with seren 0.0.22 """
+    message = line.split()
+    if message[0] in TOGGLE:
+        yield message[0], message[2] == '1'
+    elif message[0] == 'err':
+        pass # error
     else:
         yield 'generic', html.escape(line)
 
-def read_output(stdout):
-    """ Reading from Seren output """
-    for line in stdout:
-        for result in parse(line.decode('utf8').rstrip()):
+class SerenClient(asyncio.Protocol):
+    def __init__(self, loop):
+        self.loop = loop
+
+    def connection_made(self, transport):
+        self.transport = transport
+
+    def data_received(self, data):
+        for result in parse(data.decode('utf8').rstrip()):
             pyotherside.send(*result)
 
-def write_input(message):
-    """ Writing to Seren input """
-    stdin.write((message+'\n').encode('utf8'))
-    stdin.flush()
-    if message.startswith('/q'):
-        pyotherside.send('exit')
+    def connection_lost(self, exc):
+        self.loop.stop()
+
+    def write(self, message):
+        self.transport.write((message+'\n').encode('utf8'))
+
+def create_seren_client(loop):
+    global serenClient
+    serenClient = SerenClient(loop)
+    return serenClient
+
+def start_loop(loop):
+    """ Reading from Seren output """
+    coro = loop.create_connection(lambda: create_seren_client(loop), '127.0.0.1', 8111)
+    loop.run_until_complete(coro)
+    loop.run_forever()
+    loop.close()
+
+def write_input_transport(transport):
+    def write_input(message):
+        """ Writing to Seren input """
+        transport.write((message+'\n').encode('utf8'))
+    return write_input
 
 def kill(process):
     """ Kill process """
     if process.poll() == None:
-        process.kill()
+        process.send_signal(signal.SIGINT)
 
 def start_seren():
     """ Run Seren without ncurses and connect pipes """
     username = getpass.getuser()
     seren = subprocess.Popen(
         shlex.split('seren -N'),
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
     )
-    global stdin
-    stdin = seren.stdin
     pyotherside.atexit(lambda: kill(seren))
-    _thread.start_new_thread(read_output, (seren.stdout,))
+    loop = asyncio.get_event_loop()
+    t = threading.Thread(target=start_loop, args=(loop,))
+    t.start()
     pyotherside.send('node-join', datetime.datetime.now(),
                      html.escape(username), '127.0.0.1:8110')
 
