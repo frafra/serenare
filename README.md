@@ -3,6 +3,7 @@
 Qt 5 interface for [Seren](http://holdenc.altervista.org/seren/)
 
 [![Build Status](https://travis-ci.org/frafra/serenare.svg?branch=master)](https://travis-ci.org/frafra/serenare)
+[![Coverage Status](https://coveralls.io/repos/github/frafra/serenare/badge.svg)](https://coveralls.io/github/frafra/serenare)
 
 ## Dependency tree
 
